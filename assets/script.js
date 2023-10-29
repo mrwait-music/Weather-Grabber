@@ -19,12 +19,12 @@ function getLocation(userInput) {
             fiveDay(lon, lat)
             currentDay(lon, lat)
         });
-    }
-    
-    // Step 2. Lon and Lat will be inputed into variables for weather api.
-    function fiveDay (longitude, lattitude) {
-        var getWeatherURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lattitude}&lon=${longitude}&units=imperial&appid=cf5137880ed7efb4df6421327fe198d4`
-        fetch(getWeatherURL)
+}
+
+// Step 2. Lon and Lat will be inputed into variables for weather api.
+function fiveDay(longitude, lattitude) {
+    var getWeatherURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lattitude}&lon=${longitude}&units=imperial&appid=cf5137880ed7efb4df6421327fe198d4`
+    fetch(getWeatherURL)
         .then(function (response) {
             return response.json();
         })
@@ -35,7 +35,7 @@ function getLocation(userInput) {
             for (var i = 5; i < data.list.length; i += 8) {
                 var day = data.list[i]
                 console.log(day)
-                var weatherFiveDay = $('#weatherFiveDay')  
+                var weatherFiveDay = $('#weatherFiveDay')
                 var windSpeed = day.wind.speed
                 var temp = day.main.temp
                 var humidity = day.main.humidity
@@ -49,23 +49,23 @@ function getLocation(userInput) {
                   <p class="card-text">Wind Speed: ${windSpeed}</p>
                 </div>
               </div>`)
-              
+
                 weatherFiveDay.append(card)
-    
+
             }
-            
+
         });
-    }
+}
 // grab weather for the current day
-    function currentDay (longitude, lattitude) {
-        var getWeatherURL = `https://api.openweathermap.org/data/2.5/weather?lat=${lattitude}&lon=${longitude}&units=imperial&appid=cf5137880ed7efb4df6421327fe198d4`
-        fetch(getWeatherURL)
+function currentDay(longitude, lattitude) {
+    var getWeatherURL = `https://api.openweathermap.org/data/2.5/weather?lat=${lattitude}&lon=${longitude}&units=imperial&appid=cf5137880ed7efb4df6421327fe198d4`
+    fetch(getWeatherURL)
         .then(function (response) {
             return response.json();
         })
         .then(function (data) {
-            console.log(data)  
-            var currentWeather = $('#weatherCurrent')  
+            console.log(data)
+            var currentWeather = $('#weatherCurrent')
             var windSpeed = data.wind.speed
             var temp = data.main.temp
             var humidity = data.main.humidity
@@ -79,18 +79,41 @@ function getLocation(userInput) {
               <p class="card-text">Wind Speed: ${windSpeed}</p>
             </div>
           </div>`)
-          
+
             currentWeather.append(card)
         });
+}
+
+function saveCity(event) {
+    // event.preventDefault()
+    var city = userInput.val()
+    localStorage.setItem('city', city)
+    console.log(localStorage)
+
+}
+
+window.onload = function () {
+    for (var i = 0; i < localStorage.length; i++) {
+      var key = localStorage.key(i);
+      var city = localStorage.getItem(key);
+      if (city) {
+        var button = $('<button>').text(city).addClass('btn btn-secondary');
+        button.click(function () {
+          getLocation(city);
+        });
+        $('#previousSearch').append(button);
+      }
     }
-
-
-
+  };
+  
 $("#form").on("submit", function (event) {
     event.preventDefault();
     var city = $(this)[0][0].value
     getLocation(city)
+    saveCity(city)
 });
+
+
 
 // Step 4. Previous city searches will be stored locally and displayed upon page refresh.
 
