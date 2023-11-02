@@ -1,8 +1,4 @@
 var userInput = $('#userInput')
-// var currentDay = dayjs()
-// var latitude = 
-// var longitude = 
-
 
 // Step 1. User input will fetch Lon + Lat for city using geocode api.
 function getLocation(userInput) {
