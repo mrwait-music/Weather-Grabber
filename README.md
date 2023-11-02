@@ -9,7 +9,7 @@ Insallation should not be necessary for this application.
 ## Usage
 This is an application that will provide the user with a 5 day weather forecast for any city they choose. They can plan their trips around a plethora of data as well as helpful weather icons. Recent searches will automatically appear based on previous searches.
 
-<img src=>
+![Alt text](<assets/Weather Grab.gif>)
 
 ## Contributing
 Special thanks to Eric Sayer for helping me build this application during our tutoring session.
