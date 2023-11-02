@@ -25,17 +25,18 @@ function getLocation(userInput) {
 function fiveDay(longitude, lattitude) {
     var getWeatherURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lattitude}&lon=${longitude}&units=imperial&appid=cf5137880ed7efb4df6421327fe198d4`
     fetch(getWeatherURL)
-        .then(function (response) {
-            return response.json();
-        })
-        // grab weather at noon each day
-        // Step 3. 5 day weather forecast for city will be returned and displayed on screen.
-        .then(function (data) {
+    .then(function (response) {
+      return response.json();
+    })
+          // grab weather at noon each day
+          // Step 3. 5 day weather forecast for city will be returned and displayed on screen.
+          .then(function (data) {
+            var weatherFiveDay = $('#weatherFiveDay')
+            weatherFiveDay.empty()
             console.log(data)
             for (var i = 5; i < data.list.length; i += 8) {
                 var day = data.list[i]
                 console.log(day)
-                var weatherFiveDay = $('#weatherFiveDay')
                 var windSpeed = day.wind.speed
                 var temp = day.main.temp
                 var humidity = day.main.humidity
@@ -57,6 +58,7 @@ function fiveDay(longitude, lattitude) {
         });
 }
 // grab weather for the current day
+// temp, wind speed, humidity, icon (in weather array)
 function currentDay(longitude, lattitude) {
     var getWeatherURL = `https://api.openweathermap.org/data/2.5/weather?lat=${lattitude}&lon=${longitude}&units=imperial&appid=cf5137880ed7efb4df6421327fe198d4`
     fetch(getWeatherURL)
@@ -66,6 +68,7 @@ function currentDay(longitude, lattitude) {
         .then(function (data) {
             console.log(data)
             var currentWeather = $('#weatherCurrent')
+            currentWeather.empty()
             var windSpeed = data.wind.speed
             var temp = data.main.temp
             var humidity = data.main.humidity
@@ -85,22 +88,28 @@ function currentDay(longitude, lattitude) {
 }
 
 function saveCity(event) {
-    // event.preventDefault()
     var city = userInput.val()
-    localStorage.setItem('city', city)
+    var savedCity = JSON.parse(localStorage.getItem('city'))||[]
+    var filteredCity = savedCity.filter(prevCity => city != prevCity)
+    filteredCity.push(city)
+    localStorage.setItem('city', JSON.stringify(filteredCity))
     console.log(localStorage)
-
-}
-
-window.onload = function () {
-    for (var i = 0; i < localStorage.length; i++) {
+  }
+  
+  // Step 4. Previous city searches will be stored locally and displayed upon page refresh.
+function displayButton() {
+  $('#previousSearch').empty()
+  var city = JSON.parse(localStorage.getItem('city'))||[]
+    for (var i = 0; i < city.length; i++) {
       var key = localStorage.key(i);
-      var city = localStorage.getItem(key);
       if (city) {
-        var button = $('<button>').text(city).addClass('btn btn-secondary');
-        button.click(function () {
-          getLocation(city);
+        var button = $('<button>').text(city[i]).addClass('btn btn-secondary');
+        button.click(function (event) {
+          console.log(event.target.textContent);
+          getLocation(event.target.textContent);
+        
         });
+
         $('#previousSearch').append(button);
       }
     }
@@ -111,11 +120,10 @@ $("#form").on("submit", function (event) {
     var city = $(this)[0][0].value
     getLocation(city)
     saveCity(city)
+    displayButton()
 });
 
+displayButton()
 
 
-// Step 4. Previous city searches will be stored locally and displayed upon page refresh.
 
-
-// temp, wind speed, humidity, icon (in weather array)
