@@ -2,7 +2,7 @@ var userInput = $('#userInput')
 
 // Step 1. User input will fetch Lon + Lat for city using geocode api.
 function getLocation(userInput) {
-    var getLocationURL = `http://api.openweathermap.org/geo/1.0/direct?q=${userInput}&limit=1&appid=cf5137880ed7efb4df6421327fe198d4`
+    var getLocationURL = `https://api.openweathermap.org/geo/1.0/direct?q=${userInput}&limit=1&appid=cf5137880ed7efb4df6421327fe198d4`
 
     fetch(getLocationURL)
         .then(function (response) {
